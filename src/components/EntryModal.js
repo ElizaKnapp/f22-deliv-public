@@ -56,7 +56,7 @@ export default function EntryModal({ entry, type, user }) {
          name: name,
          link: link,
          description: description,
-         user: user?.displayName,
+         user: user?.displayName ? user?.displayName : "GenericUser",
          category: category,
          userid: user?.uid,
       };
