@@ -1,4 +1,4 @@
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, setDoc, collection, doc } from "firebase/firestore";
 import { db } from './firebase';
 
 // Functions for database mutations
@@ -12,6 +12,7 @@ export const emptyEntry = {
 }
 
 export async function addEntry(entry) {
+   console.log(entry.userid)
    await addDoc(collection(db, "entries"), {
       name: entry.name,
       link: entry.link,
@@ -26,6 +27,17 @@ export async function addEntry(entry) {
 
 export async function updateEntry(entry) {
    // TODO: Create Mutation to Edit Entry
+   console.log(entry)
+   await setDoc(doc(db, "entries", entry.userid), {
+      name: entry.name,
+      link: entry.link,
+      description: entry.description,
+      user: entry.user,
+      category: entry.category,
+      // The ID of the current user is logged with the new entry for database user-access functionality.
+      // You should not remove this userid property, otherwise your logged entries will not display.
+      userid: entry.userid,
+   });
 }
 
 export async function deleteEntry(entry) {

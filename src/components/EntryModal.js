@@ -13,7 +13,7 @@ import TextField from '@mui/material/TextField';
 import * as React from 'react';
 import { useState } from 'react';
 import { categories } from '../utils/categories';
-import { addEntry } from '../utils/mutations';
+import { addEntry, updateEntry } from '../utils/mutations';
 
 // Modal component for individual entries.
 
@@ -51,7 +51,6 @@ export default function EntryModal({ entry, type, user }) {
    };
 
    // Mutation handlers
-
    const handleAdd = () => {
       const newEntry = {
          name: name,
@@ -67,6 +66,21 @@ export default function EntryModal({ entry, type, user }) {
    };
 
    // TODO: Add Edit Mutation Handler
+   const handleEdit = () => {
+      console.log(name)
+      console.log(link)
+      const newEntry = {
+         name: name,
+         link: link,
+         description: description,
+         user: user?.displayName,
+         category: category,
+         userid: user?.uid,
+      };
+
+      updateEntry(newEntry).catch(console.error);
+      handleClose();
+   }
 
    // TODO: Add Delete Mutation Handler
 
@@ -87,6 +101,7 @@ export default function EntryModal({ entry, type, user }) {
       type === "edit" ?
          <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
+            <Button variant="contained" onClick={handleEdit}>Edit Entry</Button>
          </DialogActions>
          : type === "add" ?
             <DialogActions>

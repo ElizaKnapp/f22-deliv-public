@@ -40,6 +40,7 @@ export default function EntryTable({ entries }) {
                         <EntryModal entry={entry} type="edit" />
                      </TableCell>
                   </TableRow>
+      
                ))}
             </TableBody>
          </Table>
