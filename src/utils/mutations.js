@@ -9,11 +9,13 @@ export const emptyEntry = {
    description: "",
    user: "",
    category: 0,
+   id: ""
 }
 
 export async function addEntry(entry) {
    console.log(entry.userid)
-   await addDoc(collection(db, "entries"), {
+   const location = await collection(db, "entries");
+   await addDoc(location, {
       name: entry.name,
       link: entry.link,
       description: entry.description,
@@ -22,13 +24,18 @@ export async function addEntry(entry) {
       // The ID of the current user is logged with the new entry for database user-access functionality.
       // You should not remove this userid property, otherwise your logged entries will not display.
       userid: entry.userid,
+      id: location.id
    });
 }
 
 export async function updateEntry(entry) {
    // TODO: Create Mutation to Edit Entry
-   console.log(entry)
-   await setDoc(doc(db, "entries", entry.userid), {
+   console.log(entry.id)
+
+   const docRef = await doc(db, "entries", entry.id)
+   console.log(docRef)
+
+   const data = {
       name: entry.name,
       link: entry.link,
       description: entry.description,
@@ -37,7 +44,16 @@ export async function updateEntry(entry) {
       // The ID of the current user is logged with the new entry for database user-access functionality.
       // You should not remove this userid property, otherwise your logged entries will not display.
       userid: entry.userid,
-   });
+      id: entry.id
+   }
+
+   setDoc(docRef, data)
+   .then(docRef => {
+      console.log("doc updated successfully");
+   })
+   .catch(error => {
+      console.log(error);
+   })
 }
 
 export async function deleteEntry(entry) {

@@ -69,6 +69,7 @@ export default function EntryModal({ entry, type, user }) {
    const handleEdit = () => {
       console.log(name)
       console.log(link)
+      console.log(entry)
       const newEntry = {
          name: name,
          link: link,
@@ -76,6 +77,7 @@ export default function EntryModal({ entry, type, user }) {
          user: user?.displayName,
          category: category,
          userid: user?.uid,
+         id: entry.id
       };
 
       updateEntry(newEntry).catch(console.error);
