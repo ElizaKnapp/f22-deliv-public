@@ -1,6 +1,7 @@
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
+import Alert from '@mui/material/Alert';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -36,14 +37,20 @@ export default function EntryModal({ entry, type, user }) {
    const [description, setDescription] = useState(entry.description);
    const [category, setCategory] = React.useState(entry.category);
 
+   let [blank, setBlank] = useState(false);
+   let [success, setSuccess] = useState(false);
+
    // Modal visibility handlers
 
    const handleClickOpen = () => {
+      console.log("ran")
       setOpen(true);
       setName(entry.name);
       setLink(entry.link);
       setDescription(entry.description);
       setCategory(entry.category);
+      setBlank(false)
+      setSuccess(false)
    };
 
    const handleClose = () => {
@@ -52,43 +59,55 @@ export default function EntryModal({ entry, type, user }) {
 
    // Mutation handlers
    const handleAdd = () => {
-      const newEntry = {
-         name: name,
-         link: link,
-         description: description,
-         user: user?.displayName ? user?.displayName : "GenericUser",
-         category: category,
-         userid: user?.uid,
-      };
-
-      addEntry(newEntry).catch(console.error);
+      if (name === "" || link=== "") {
+         setBlank(true)
+      } else {
+         const newEntry = {
+            name: name,
+            link: link,
+            description: description,
+            user: user?.displayName ? user?.displayName : "GenericUser",
+            category: category,
+            userid: user?.uid,
+         };
+   
+         addEntry(newEntry).catch(console.error);
+         setSuccess(true)
+      }
       handleClose();
    };
 
    const handleEdit = () => {
-      const newEntry = {
-         name: name,
-         link: link,
-         description: description,
-         user: user?.displayName,
-         category: category,
-         userid: user?.uid,
-         id: entry.id
-      };
-   
+      if (name === "" || link=== "") {
+         setBlank(true)
+      } else {
+         const newEntry = {
+            name: name,
+            link: link,
+            description: description,
+            user: user?.displayName,
+            category: category,
+            userid: user?.uid,
+            id: entry.id
+         };
       
-      updateEntry(newEntry).catch(console.error);
+         updateEntry(newEntry).catch(console.error);
+         setSuccess(true)
+         setBlank(false)
+      }
+      
       handleClose();
-   }
+   };
    
    const handleDelete = () => {
       deleteEntry(entry).catch(console.error)
+      setBlank(false)
+      setSuccess(false)
       handleClose();
    };
 
    // Button handlers for modal opening and inside-modal actions.
    // These buttons are displayed conditionally based on if adding or editing/opening.
-   // TODO: You may have to edit these buttons to implement editing/deleting functionality.
 
    const openButton =
       type === "edit" ? <IconButton onClick={handleClickOpen}>
@@ -113,60 +132,73 @@ export default function EntryModal({ entry, type, user }) {
                <Button variant="contained" onClick={handleAdd}>Add</Button>
             </DialogActions>
             : null;
+   
+   const alertBanner = 
+      blank ?
+      <Alert severity="error">
+         Please include both a name and a link
+      </Alert> :
+      success ?
+      <Alert severity="success">
+         Action Successful
+      </Alert>
+      : null;
 
    return (
       <div>
-         {openButton}
-         <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>{type === "edit" ? name : "Add Entry"}</DialogTitle>
-            <DialogContent>
-               {/* TODO: Feel free to change the properties of these components to implement editing functionality. The InputProps props class for these MUI components allows you to change their traditional CSS properties. */}
-               <TextField
-                  margin="normal"
-                  id="name"
-                  label="Name"
-                  fullWidth
-                  variant="standard"
-                  value={name}
-                  onChange={(event) => setName(event.target.value)}
-               />
-               <TextField
-                  margin="normal"
-                  id="link"
-                  label="Link"
-                  placeholder="e.g. https://google.com"
-                  fullWidth
-                  variant="standard"
-                  value={link}
-                  onChange={(event) => setLink(event.target.value)}
-               />
-               <TextField
-                  margin="normal"
-                  id="description"
-                  label="Description"
-                  fullWidth
-                  variant="standard"
-                  multiline
-                  maxRows={8}
-                  value={description}
-                  onChange={(event) => setDescription(event.target.value)}
-               />
+         {alertBanner} <br></br>
+         <div>
+            {openButton}
+            <Dialog open={open} onClose={handleClose}>
+               <DialogTitle>{type === "edit" ? name : "Add Entry"}</DialogTitle>
+               <DialogContent>
+                  <TextField
+                     margin="normal"
+                     id="name"
+                     label="Name"
+                     fullWidth
+                     variant="standard"
+                     value={name}
+                     onChange={(event) => setName(event.target.value)}
+                  />
+                  <TextField
+                     margin="normal"
+                     id="link"
+                     label="Link"
+                     placeholder="e.g. https://google.com"
+                     fullWidth
+                     variant="standard"
+                     value={link}
+                     onChange={(event) => setLink(event.target.value)}
+                  />
+                  <TextField
+                     margin="normal"
+                     id="description"
+                     label="Description"
+                     fullWidth
+                     variant="standard"
+                     multiline
+                     maxRows={8}
+                     value={description}
+                     onChange={(event) => setDescription(event.target.value)}
+                  />
 
-               <FormControl fullWidth sx={{ "margin-top": 20 }}>
-                  <InputLabel id="demo-simple-select-label">Category</InputLabel>
-                  <Select
-                     labelId="demo-simple-select-label"
-                     id="demo-simple-select"
-                     value={category}
-                     label="Category"
-                     onChange={(event) => setCategory(event.target.value)}
-                  >
-                     {categories.map((category) => (<MenuItem value={category.id}>{category.name}</MenuItem>))}
-                  </Select>
-               </FormControl>
-            </DialogContent>
-            {actionButtons}
-         </Dialog>
+                  <FormControl fullWidth sx={{ "margin-top": 20 }}>
+                     <InputLabel id="demo-simple-select-label">Category</InputLabel>
+                     <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={category}
+                        label="Category"
+                        onChange={(event) => setCategory(event.target.value)}
+                     >
+                        {categories.map((category) => (<MenuItem value={category.id}>{category.name}</MenuItem>))}
+                     </Select>
+                  </FormControl>
+               </DialogContent>
+               {actionButtons}
+            </Dialog>
+         </div>
       </div>
    );
 }
