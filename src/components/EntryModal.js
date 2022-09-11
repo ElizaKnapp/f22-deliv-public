@@ -13,7 +13,7 @@ import TextField from '@mui/material/TextField';
 import * as React from 'react';
 import { useState } from 'react';
 import { categories } from '../utils/categories';
-import { addEntry, updateEntry } from '../utils/mutations';
+import { addEntry, updateEntry, deleteEntry } from '../utils/mutations';
 
 // Modal component for individual entries.
 
@@ -65,11 +65,7 @@ export default function EntryModal({ entry, type, user }) {
       handleClose();
    };
 
-   // TODO: Add Edit Mutation Handler
    const handleEdit = () => {
-      console.log(name)
-      console.log(link)
-      console.log(entry)
       const newEntry = {
          name: name,
          link: link,
@@ -79,12 +75,16 @@ export default function EntryModal({ entry, type, user }) {
          userid: user?.uid,
          id: entry.id
       };
-
+   
+      
       updateEntry(newEntry).catch(console.error);
       handleClose();
    }
-
-   // TODO: Add Delete Mutation Handler
+   
+   const handleDelete = () => {
+      deleteEntry(entry).catch(console.error)
+      handleClose();
+   };
 
    // Button handlers for modal opening and inside-modal actions.
    // These buttons are displayed conditionally based on if adding or editing/opening.
@@ -103,12 +103,14 @@ export default function EntryModal({ entry, type, user }) {
       type === "edit" ?
          <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
-            <Button variant="contained" onClick={handleEdit}>Edit Entry</Button>
+            <Button color="error" onClick={handleDelete}>Delete</Button>
+            <Button variant="contained" onClick={handleEdit}>Edit</Button>
          </DialogActions>
          : type === "add" ?
             <DialogActions>
                <Button onClick={handleClose}>Cancel</Button>
-               <Button variant="contained" onClick={handleAdd}>Add Entry</Button>
+               <Button color="error" onClick={handleDelete}>Delete</Button>
+               <Button variant="contained" onClick={handleAdd}>Add</Button>
             </DialogActions>
             : null;
 

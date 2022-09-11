@@ -1,4 +1,4 @@
-import { addDoc, setDoc, collection, doc } from "firebase/firestore";
+import { addDoc, updateDoc, collection, doc, deleteDoc } from "firebase/firestore";
 import { db } from './firebase';
 
 // Functions for database mutations
@@ -24,30 +24,24 @@ export async function addEntry(entry) {
       // The ID of the current user is logged with the new entry for database user-access functionality.
       // You should not remove this userid property, otherwise your logged entries will not display.
       userid: entry.userid,
-      id: location.id
+      id: location.id // adds a new unique id to reference by
    });
 }
 
 export async function updateEntry(entry) {
-   // TODO: Create Mutation to Edit Entry
-   console.log(entry.id)
-
    const docRef = await doc(db, "entries", entry.id)
-   console.log(docRef)
 
    const data = {
       name: entry.name,
       link: entry.link,
       description: entry.description,
-      user: entry.user,
       category: entry.category,
       // The ID of the current user is logged with the new entry for database user-access functionality.
       // You should not remove this userid property, otherwise your logged entries will not display.
-      userid: entry.userid,
       id: entry.id
    }
 
-   setDoc(docRef, data)
+   await updateDoc(docRef, data)
    .then(docRef => {
       console.log("doc updated successfully");
    })
@@ -57,5 +51,13 @@ export async function updateEntry(entry) {
 }
 
 export async function deleteEntry(entry) {
-   // TODO: Create Mutation to Delete Entry
+   const docRef = await doc(db, "entries", entry.id)
+
+   await deleteDoc(docRef)
+   .then(docRef => {
+      console.log("doc deleted successfully");
+   })
+   .catch(error => {
+      console.log(error)
+   })
 }

@@ -39,6 +39,9 @@ export default function EntryTable({ entries }) {
                      <TableCell sx={{ "padding-top": 0, "padding-bottom": 0 }} align="right">
                         <EntryModal entry={entry} type="edit" />
                      </TableCell>
+                     <TableCell sx={{ "padding-top": 0, "padding-bottom": 0 }} align="right">
+                        <EntryModal entry={entry} type="delete" />
+                     </TableCell>
                   </TableRow>
       
                ))}
