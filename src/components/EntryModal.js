@@ -13,7 +13,7 @@ import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import * as React from 'react';
 import { useState } from 'react';
-import { categories } from '../utils/categories';
+import { categories, getCategory } from '../utils/categories';
 import { addEntry, updateEntry, deleteEntry } from '../utils/mutations';
 
 // Modal component for individual entries.
@@ -32,6 +32,7 @@ export default function EntryModal({ entry, type, user }) {
    // TODO: For editing, you may have to add and manage another state variable to check if the entry is being edited.
 
    const [open, setOpen] = useState(false);
+   const [viewOpen, setViewOpen] = useState(false);
    const [name, setName] = useState(entry.name);
    const [link, setLink] = useState(entry.link);
    const [description, setDescription] = useState(entry.description);
@@ -43,7 +44,6 @@ export default function EntryModal({ entry, type, user }) {
    // Modal visibility handlers
 
    const handleClickOpen = () => {
-      console.log("ran")
       setOpen(true);
       setName(entry.name);
       setLink(entry.link);
@@ -53,9 +53,23 @@ export default function EntryModal({ entry, type, user }) {
       setSuccess(false)
    };
 
+   const handleClickView = () => {
+      setViewOpen(true);
+      setName(entry.name);
+      setLink(entry.link);
+      setDescription(entry.description);
+      setCategory(entry.category);
+      setBlank(false)
+      setSuccess(false)
+   }
+
    const handleClose = () => {
       setOpen(false);
    };
+
+   const handleViewClose = () => {
+      setViewOpen(false);
+   }
 
    // Mutation handlers
    const handleAdd = () => {
@@ -117,6 +131,12 @@ export default function EntryModal({ entry, type, user }) {
             Add entry
          </Button>
             : null;
+   
+   const viewButton = 
+      type === "view" ? <IconButton onClick={handleClickView}>
+         <OpenInNewIcon />
+      </IconButton>
+         : null;
 
    const actionButtons =
       type === "edit" ?
@@ -131,6 +151,10 @@ export default function EntryModal({ entry, type, user }) {
                <Button color="error" onClick={handleDelete}>Delete</Button>
                <Button variant="contained" onClick={handleAdd}>Add</Button>
             </DialogActions>
+            : type === "view" ?
+               <DialogActions>
+                  <Button onClick={handleViewClose}>Close</Button>
+               </DialogActions>
             : null;
    
    const alertBanner = 
@@ -148,6 +172,19 @@ export default function EntryModal({ entry, type, user }) {
       <div>
          {alertBanner} <br></br>
          <div>
+            {viewButton}
+            <Dialog open={viewOpen} onClose={handleViewClose}>
+            <DialogTitle>View Entry</DialogTitle>
+               <DialogContent>
+                  Name: {name} <br></br>
+                  <ul>
+                     <li>Link: <a href={link}>{link}</a></li>
+                     <li>Description: {description}</li>
+                     <li>Category: {getCategory(category).name}</li>
+                  </ul>
+               </DialogContent>
+               {actionButtons}
+            </Dialog>
             {openButton}
             <Dialog open={open} onClose={handleClose}>
                <DialogTitle>{type === "edit" ? name : "Add Entry"}</DialogTitle>
