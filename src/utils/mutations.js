@@ -13,7 +13,6 @@ export const emptyEntry = {
 }
 
 export async function addEntry(entry) {
-   console.log(entry.userid)
    const location = await collection(db, "entries");
    await addDoc(location, {
       name: entry.name,
