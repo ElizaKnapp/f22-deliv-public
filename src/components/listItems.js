@@ -24,25 +24,25 @@ export default function ListItems() {
     r[i] = Math.floor(Math.random() * 105);
   }
 
-  const handleClickLearn = () => {
-    setOpen(true)
-    // find the data from the api
-    const options = {
-      method: 'GET',
-      url: 'https://climate-change-news-media.p.rapidapi.com/news',
-      headers: {
-        'X-RapidAPI-Key': '80cdebb798msh0879e36a8035d5ep16405djsnde0b9bafb7d3',
-        'X-RapidAPI-Host': 'climate-change-news-media.p.rapidapi.com'
-      }
-    };
+  // const handleClickLearn = () => {
+  //   setOpen(true)
+  //   // find the data from the api
+  //   const options = {
+  //     method: 'GET',
+  //     url: 'https://climate-change-news-media.p.rapidapi.com/news',
+  //     headers: {
+  //       'X-RapidAPI-Key': '80cdebb798msh0879e36a8035d5ep16405djsnde0b9bafb7d3',
+  //       'X-RapidAPI-Host': 'climate-change-news-media.p.rapidapi.com'
+  //     }
+  //   };
 
-    axios.request(options).then(function (response) {
-      setResults(response.data)
-    }).catch(function (error) {
-      console.error(error);
-    });
+  //   axios.request(options).then(function (response) {
+  //     setResults(response.data)
+  //   }).catch(function (error) {
+  //     console.error(error);
+  //   });
 
-  }
+  // }
 
   const handleClose = () => {
     setOpen(false)
@@ -69,26 +69,26 @@ export default function ListItems() {
     </React.Fragment>
   );
 
-  const items = 
-    results != null ?
-      <ul>
-        <li>
-          <a href={results[r[0]].url}>{results[r[0]].title}</a>
-        </li>
-        <li>
-          <a href={results[r[1]].url}>{results[r[1]].title}</a>
-        </li>
-        <li>
-          <a href={results[r[2]].url}>{results[r[2]].title}</a>
-        </li>
-        <li>
-          <a href={results[r[3]].url}>{results[r[3]].title}</a>
-        </li>
-        <li>
-          <a href={results[r[4]].url}>{results[r[4]].title}</a>
-        </li>
-      </ul>
-      :null;
+  // const items = 
+  //   results != null ?
+  //     <ul>
+  //       <li>
+  //         <a href={results[r[0]].url}>{results[r[0]].title}</a>
+  //       </li>
+  //       <li>
+  //         <a href={results[r[1]].url}>{results[r[1]].title}</a>
+  //       </li>
+  //       <li>
+  //         <a href={results[r[2]].url}>{results[r[2]].title}</a>
+  //       </li>
+  //       <li>
+  //         <a href={results[r[3]].url}>{results[r[3]].title}</a>
+  //       </li>
+  //       <li>
+  //         <a href={results[r[4]].url}>{results[r[4]].title}</a>
+  //       </li>
+  //     </ul>
+  //     :null;
 
 
   return(
@@ -96,7 +96,7 @@ export default function ListItems() {
       <Dialog open={open}>
         <DialogTitle>Learn More!</DialogTitle>
         <DialogContent>
-          {items}
+          {/* {items} */} HI
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Exit</Button>
