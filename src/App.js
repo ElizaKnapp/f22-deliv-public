@@ -20,7 +20,7 @@ import { useEffect, useState } from "react";
 import './App.css';
 import EntryTable from './components/EntryTable';
 import EntryModal from './components/EntryModal';
-import { mainListItems } from './components/listItems';
+import ListItems from './components/ListItems';
 import { db, SignInScreen } from './utils/firebase';
 import { emptyEntry } from './utils/mutations';
 
@@ -213,7 +213,7 @@ export default function App() {
           </Toolbar>
           <Divider />
           <List component="nav">
-            {mainListItems}
+            <ListItems/>
           </List>
         </Drawer>
         <Box

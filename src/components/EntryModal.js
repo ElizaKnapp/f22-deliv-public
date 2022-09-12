@@ -16,6 +16,7 @@ import { useState } from 'react';
 import { categories, getCategory } from '../utils/categories';
 import { addEntry, updateEntry, deleteEntry } from '../utils/mutations';
 
+
 // Modal component for individual entries.
 
 /* EntryModal parameters:
@@ -167,6 +168,8 @@ export default function EntryModal({ entry, type, user }) {
          Action Successful
       </Alert>
       : null;
+ 
+      
 
    return (
       <div>
